@@ -1,50 +1,40 @@
 import path from 'path';
+import fs from 'fs';
 
-import GasPlugin from 'gas-webpack-plugin';
+import rollup from 'rollup';
+import ruResolve from 'rollup-plugin-node-resolve';
+
 import { bundleServer as lg } from './logger';
+import timer from '../util/timer';
 
-const input = path.join(process.cwd(), '/server/index.js');
-const output = path.join(process.cwd(), '/clasp/');
+// see below for details on the options
+const inputOptions = {
+  input: path.join(process.cwd(), '/server/index.js'),
+  plugins: [ruResolve()],
+  context: process.cwd()
+};
+const outputOptions = {
+  file: path.join(process.cwd(), '/clasp/api.js'),
+  compact: true,
+  format: 'es',
+  globals: ['api'],
+  banner: `${fs.readFileSync(path.resolve(__dirname, '../src/api/serverAppend.js'))}
+{`,
+  footer: '}'
+};
 
-const webpack = require('webpack');
-
-const bundleServer = () => new Promise((resolve, reject) => {
-  lg.start();
-  webpack({
-    mode: 'production',
-    devtool: false,
-    context: process.cwd(),
-    entry: input,
-    plugins: [
-      new GasPlugin(),
-    ],
-    output: {
-      path: output,
-      filename: 'Code.js',
-    },
-    optimization: {
-      minimize: false
-    /* minimizer: [
-      new TerserPlugin({
-        cache: true,
-        parallel: true,
-        terserOptions: {
-          compress: { defaults: false, top_retain: true },
-
-          output: { max_line_len: 100 },
-          // https://github.com/webpack-contrib/terser-webpack-plugin#terseroptions
-        },
-      })]
-      */
-    },
-  }, (err, stats) => { // Stats Object
-    if (err || stats.hasErrors()) reject(err || stats);
-    else {
-      lg.success();
-      resolve();
-    }
-  // Done processing
+async function build() {
+  return new Promise((resolve) => {
+    const tm = timer().start();
+    lg.start();
+    // create a bundle
+    rollup.rollup(inputOptions)
+      .then((bundle) => bundle.write(outputOptions))
+      .then(() => {
+        lg.success(tm.end());
+        resolve();
+      });
   });
-});
+}
 
-export default bundleServer;
+export default build;

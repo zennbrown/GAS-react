@@ -8,10 +8,10 @@ const replace = require('gulp-replace');
 
 // do some error handling
 
-const gulpReactBuild = (options) => new Promise((resolve) => {
+const gulpReactBuild = () => new Promise((resolve) => {
   const tm = timer().start();
   lg.start();
-  const input = path.join(process.cwd(), options.reactBuildDirectory);
+  const input = path.join(process.cwd(), '/build/index.html');
   const output = path.join(process.cwd(), '/clasp/');
   gulp.src(input)
     .pipe(replace('.js"></script>', '.js" inline></script>'))
@@ -21,7 +21,8 @@ const gulpReactBuild = (options) => new Promise((resolve) => {
       ignore: ['png'],
     }))
     .pipe(gulp.dest(output))
-    .on('end', () => {
+    .on('end', (err) => {
+      if (err) console.log(err);
       lg.success(tm.end());
       resolve();
     });

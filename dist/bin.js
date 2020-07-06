@@ -8,7 +8,8 @@ var copyDir = _interopDefault(require('copy-dir'));
 var cls = _interopDefault(require('cli-select'));
 var clc = _interopDefault(require('cli-color'));
 var fs$1 = _interopDefault(require('fs'));
-var GasPlugin = _interopDefault(require('gas-webpack-plugin'));
+var rollup = _interopDefault(require('rollup'));
+var ruResolve = _interopDefault(require('rollup-plugin-node-resolve'));
 
 const fs = require('fs');
 
@@ -96,19 +97,21 @@ const bundleServer = {
   success: (time) => lg(`Completed in ${time}ms`)
 };
 
+var timer = () => {
+  const time = Date.now();
+  return { start: () => ({ end: () => Date.now() - time }) };
+};
+
 const gulp = require('gulp');
 const inlinesource = require('gulp-inline-source');
 const replace = require('gulp-replace');
 
 // do some error handling
 
-const gulpReactBuild$1 = (options) => new Promise((resolve) => {
+const gulpReactBuild$1 = () => new Promise((resolve) => {
   const tm = timer().start();
-
-  setTimeout(() => console.log(tm.end()), 500);
-  const startTime = Date.now();
   gulpReactBuild.start();
-  const input = path.join(process.cwd(), options.reactBuildDirectory);
+  const input = path.join(process.cwd(), '/build/index.html');
   const output = path.join(process.cwd(), '/clasp/');
   gulp.src(input)
     .pipe(replace('.js"></script>', '.js" inline></script>'))
@@ -118,60 +121,42 @@ const gulpReactBuild$1 = (options) => new Promise((resolve) => {
       ignore: ['png'],
     }))
     .pipe(gulp.dest(output))
-    .on('end', () => {
-      gulpReactBuild.success(Date.now() - startTime);
+    .on('end', (err) => {
+      if (err) console.log(err);
+      gulpReactBuild.success(tm.end());
       resolve();
     });
 });
 
-const timer = () => {
-  const time = Date.now();
-  return { start: () => ({ end: () => Date.now() - time }) };
+// see below for details on the options
+const inputOptions = {
+  input: path.join(process.cwd(), '/server/index.js'),
+  plugins: [ruResolve()],
+  context: process.cwd()
+};
+const outputOptions = {
+  file: path.join(process.cwd(), '/clasp/api.js'),
+  compact: true,
+  format: 'es',
+  globals: ['api'],
+  banner: `${fs$1.readFileSync(path.resolve(__dirname, '../src/api/serverAppend.js'))}
+{`,
+  footer: '}'
 };
 
-const input = path.join(process.cwd(), '/server/index.js');
-const output = path.join(process.cwd(), '/clasp/');
-
-const webpack = require('webpack');
-
-const bundleServer$1 = () => new Promise((resolve, reject) => {
-  bundleServer.start();
-  webpack({
-    mode: 'production',
-    devtool: false,
-    context: process.cwd(),
-    entry: input,
-    plugins: [
-      new GasPlugin(),
-    ],
-    output: {
-      path: output,
-      filename: 'Code.js',
-    },
-    optimization: {
-      minimize: false
-    /* minimizer: [
-      new TerserPlugin({
-        cache: true,
-        parallel: true,
-        terserOptions: {
-          compress: { defaults: false, top_retain: true },
-
-          output: { max_line_len: 100 },
-          // https://github.com/webpack-contrib/terser-webpack-plugin#terseroptions
-        },
-      })]
-      */
-    },
-  }, (err, stats) => { // Stats Object
-    if (err || stats.hasErrors()) reject(err || stats);
-    else {
-      bundleServer.success();
-      resolve();
-    }
-  // Done processing
+async function build() {
+  return new Promise((resolve) => {
+    const tm = timer().start();
+    bundleServer.start();
+    // create a bundle
+    rollup.rollup(inputOptions)
+      .then((bundle) => bundle.write(outputOptions))
+      .then(() => {
+        bundleServer.success(tm.end());
+        resolve();
+      });
   });
-});
+}
 
 const parseOptions = (options) => {
   if (typeof options.reactBuildDirectory !== 'string') throw new Error('reactBuildDirectory must be a string');
@@ -184,8 +169,8 @@ const defaults = {
 const bundle = (_options = {}) => {
   const options = { ...defaults, ..._options };
   parseOptions(options);
-  gulpReactBuild$1(options)
-    .then(() => bundleServer$1())
+  gulpReactBuild$1()
+    .then(() => build())
     .then(() => console.log('success'))
     .catch((err) => console.log(err));
 };
