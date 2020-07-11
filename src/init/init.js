@@ -12,9 +12,7 @@ const init = () => {
     .then(copyProjectDirectory)
     .then(updatePackageJson)
     .then(() => console.log('done'))
-    .catch((err) => {
-      if (err) console.error(err);
-    });
+    .catch(console.error);
   // ask if they wish to add sample hello world app
 };
 export default init;
