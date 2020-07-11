@@ -10,6 +10,7 @@ var clc = _interopDefault(require('cli-color'));
 var fs$1 = _interopDefault(require('fs'));
 var rollup = _interopDefault(require('rollup'));
 var ruResolve = _interopDefault(require('rollup-plugin-node-resolve'));
+var child_process = require('child_process');
 
 const fs = require('fs');
 
@@ -20,7 +21,7 @@ const updatePackageJson = () => new Promise((resolve) => {
       throw err;
     } else {
       const obj = JSON.parse(data); // now it an object
-      obj.scripts.bundle = 'gas-react bundle';
+      obj.scripts.build = 'gas-react bundle';
       const json = JSON.stringify(obj, null, 2); // convert it back to json
       fs.writeFile(jsonPath, json, 'utf8', (err1) => { // write it back
         if (err1) throw err1;
@@ -80,9 +81,7 @@ const init = () => {
     .then(copyProjectDirectory)
     .then(updatePackageJson)
     .then(() => console.log('done'))
-    .catch((err) => {
-      if (err) console.error(err);
-    });
+    .catch(console.error);
   // ask if they wish to add sample hello world app
 };
 
@@ -92,8 +91,16 @@ const gulpReactBuild = {
   start: () => lg('Converting react build into GAS friendly bundle'),
   success: (time) => lg(`Completed in ${time}ms`)
 };
+const bundle = {
+  start: () => lg('Okay.... Lets GAS this app!'),
+  success: (time) => lg(`Your app is GASSED. Complete in ${time}ms`)
+};
 const bundleServer = {
   start: () => lg('Converting server source into GAS friendly bundle'),
+  success: (time) => lg(`Completed in ${time}ms`)
+};
+const createReactApp = {
+  start: () => lg('Building productionized React App using create-react-app'),
   success: (time) => lg(`Completed in ${time}ms`)
 };
 
@@ -158,6 +165,17 @@ async function build() {
   });
 }
 
+var createReactApp$1 = () => new Promise((resolve, reject) => {
+  const tm = timer().start();
+  createReactApp.start();
+  const ls = child_process.spawnSync('react-scripts', ['build'], { env: { ...process.env, GENERATE_SOURCEMAP: false }, shell: true });
+  if (ls.error) reject(ls.error);
+  else {
+    createReactApp.success(tm.end());
+    resolve();
+  }
+});
+
 const parseOptions = (options) => {
   if (typeof options.reactBuildDirectory !== 'string') throw new Error('reactBuildDirectory must be a string');
 };
@@ -166,17 +184,20 @@ const defaults = {
   reactBuildDirectory: '/build/'
 };
 
-const bundle = (_options = {}) => {
+const bundle$1 = (_options = {}) => {
+  bundle.start();
+  const tm = timer().start();
   const options = { ...defaults, ..._options };
   parseOptions(options);
-  gulpReactBuild$1()
+  createReactApp$1()
+    .then(() => gulpReactBuild$1())
     .then(() => build())
-    .then(() => console.log('success'))
-    .catch((err) => console.log(err));
+    .then(() => bundle.success(tm.end()))
+    .catch(console.log);
 };
 
 const arg = process.argv[2];
 
 if (arg === 'init') init();
-else if (arg === 'bundle') bundle();
+else if (arg === 'bundle') bundle$1();
 else console.log('unknown command. use init or bundle');
