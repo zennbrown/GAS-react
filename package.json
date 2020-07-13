@@ -1,6 +1,6 @@
 {
   "name": "gas-react",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "",
   "main": "dist/entry.js",
   "entry": "dist/entry.js",
