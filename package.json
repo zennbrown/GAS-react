@@ -1,14 +1,15 @@
 {
   "name": "gas-react",
   "version": "0.1.0",
-  "description": "",
+  "description": "Bundle React Apps into Google App Scripts friendly code",
   "main": "dist/entry.js",
   "scripts": {
     "test": "echo \"Error: no test specified\"",
-    "build": "rollup --config"
+    "build": "rollup --config",
+    "deploy": "npm run build && np"
   },
   "author": "Zenn Brown",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
     "eslint": "^7.3.1",
     "eslint-config-airbnb-base": "^14.2.0",
@@ -28,6 +29,10 @@
     "gulp-replace": "^1.0.0",
     "rollup": "^2.18.1",
     "rollup-plugin-node-resolve": "^5.2.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zennbrown/gas-react.git"
   },
   "keywords": ["gas", "google app scripts", "react", "build", "web app"]
 }
