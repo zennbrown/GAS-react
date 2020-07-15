@@ -3,12 +3,11 @@
   "version": "0.1.0",
   "description": "",
   "main": "dist/entry.js",
-  "entry": "dist/entry.js",
   "scripts": {
     "test": "echo \"Error: no test specified\"",
     "build": "rollup --config"
   },
-  "author": "",
+  "author": "Zenn Brown",
   "license": "ISC",
   "devDependencies": {
     "eslint": "^7.3.1",
@@ -27,8 +26,8 @@
     "gulp": "^4.0.2",
     "gulp-inline-source": "^4.0.0",
     "gulp-replace": "^1.0.0",
-    "np": "^6.3.2",
     "rollup": "^2.18.1",
     "rollup-plugin-node-resolve": "^5.2.0"
-  }
+  },
+  "keywords": ["gas", "google app scripts", "react", "build", "web app"]
 }
