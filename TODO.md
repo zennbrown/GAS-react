@@ -1,0 +1,4 @@
+-accept trailing commas in jsons
+-bundle options in cli support
+-user object in api
+-Type script for server support
