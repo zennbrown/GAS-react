@@ -1,13 +1,24 @@
 import autoExternal from 'rollup-plugin-auto-external';
-import { preserveShebangs } from 'rollup-plugin-preserve-shebangs';
+import { getBabelOutputPlugin } from '@rollup/plugin-babel';
 
 module.exports = [{
+  external: ['path', 'fs'],
   input: './src/bin.js',
   output: {
+    banner: '#!/usr/bin/env node', // Add bin shebangs
     file: 'dist/bin.js',
     format: 'cjs',
+    plugins: [getBabelOutputPlugin({
+      presets: [
+        ['@babel/preset-env', {
+          targets: {
+            node: '10'
+          }
+        }]
+      ]
+    })]
   },
-  plugins: [preserveShebangs(), autoExternal()],
+  plugins: [autoExternal()]
 },
 {
   input: './src/entry.js',
@@ -15,5 +26,5 @@ module.exports = [{
     file: 'dist/entry.js',
     format: 'es',
   },
-  plugins: [preserveShebangs(), autoExternal()],
+  plugins: [autoExternal()],
 }];

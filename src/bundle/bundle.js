@@ -3,25 +3,27 @@ import bundleServer from './bundleServer';
 import createReactApp from './createReactApp';
 import timer from '../util/timer';
 import { bundle as lg } from './logger';
+import getConfig from './getConfig';
+import defaultOptions from './defaultOptions';
 
 const parseOptions = (options) => {
-  if (typeof options.reactBuildDirectory !== 'string') throw new Error('reactBuildDirectory must be a string');
+  if (typeof options.compress !== 'boolean') throw new Error('compress must be a boolean');
 };
 
-const defaults = {
-  reactBuildDirectory: '/build/'
-};
-
-const bundle = (_options = {}) => {
-  lg.start();
-  const tm = timer().start();
-  const options = { ...defaults, ..._options };
-  parseOptions(options);
-  createReactApp(options)
-    .then(() => gulpReactBuild(options))
-    .then(() => bundleServer(options))
-    .then(() => lg.success(tm.end()))
-    .catch(console.log);
+const bundle = async (_options = {}) => {
+  try {
+    const config = await getConfig();
+    lg.start();
+    const tm = timer().start();
+    const options = { ...defaultOptions, ...config, ..._options };
+    parseOptions(options);
+    await createReactApp(options);
+    await gulpReactBuild(options);
+    await bundleServer(options);
+    lg.success(tm.end());
+  } catch (err) {
+    console.log(err);
+  }
 };
 
 export default bundle;
