@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 import init from './init/init';
 import bundle from './bundle/bundle';
 
