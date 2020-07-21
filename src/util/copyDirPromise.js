@@ -1,12 +1,10 @@
 import copyDir from 'copy-dir';
 
 // eslint-disable-next-line no-new
-const copyDirPromise = (from, to, options) => new Promise((resolve) => {
+const copyDirPromise = (from, to, options) => new Promise((resolve, reject) => {
   copyDir(from, to, options, (err) => {
-    if (err) {
-      throw err;
-    }
-    resolve();
+    if (err) reject(err);
+    else resolve();
   });
 });
 
