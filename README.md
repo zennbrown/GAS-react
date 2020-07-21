@@ -58,12 +58,14 @@ Use <a href="https://developers.google.com/apps-script/guides/clasp" target="_bl
 
 ## API
 
+Gas-react includes a simple and familiar api interface for client-server communication.
+
 > Server Example
 
 ```javascript
 import { server } from 'gas-react';
 
-server.on('hello', ({ body }) => `Hello ${body}`);
+server.on('hello', (request) => `Hello ${request.body}`);
 ```
 > Client Example
 
@@ -76,8 +78,8 @@ function HelloWorld() {
   useEffect(() => {
     const makeCall = async () => {
       try {
-        const { body } = await client.call('hello', 'World');
-        setVal(body);
+        const response = await client.call('hello', 'World');
+        setVal(response.body);
       } catch (err) {
         setVal('Error');
       }
@@ -95,7 +97,10 @@ export default HelloWorld;
 
 ## Features
 
-- Add feature details
+- Compile React-Apps into a Google App Scripts friendly bundle
+- Simple and familiar client - server api protocol
+- Created to be used with the create-react-app toolSet, unleashing its power
+- Javascript module support ES6 or Node Module
 
 ---
 
