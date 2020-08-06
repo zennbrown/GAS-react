@@ -1,7 +1,8 @@
 # GAS-react
 
-> Have you ever wondered how to use React.js with Google App Script (GAS)? With GAS-react you can now build your very own React app that utilises GAS as the back end. What you do with this power is up to you, but here are some possible use cases...
- > - Deploy a web app hosted on Google Sites written in React
+With gas-react you can create a react app bundle that will work on the Google App Script server, allowing you to build react apps that integrate with the the google suite.
+
+The gas-react library extends the create-react-app tool set, and requires very little additional learning.
 
 </br>
 
@@ -43,12 +44,12 @@ $ npx gas-react init
 
 ## Usage
 
-- To build your app, run `npx gas-react bundle`
+- Once gas-react is installed and initialized, when you run `npm run build` your gas bundle will also be created.
 
 ```shell
-$ npx gas-react bundle
+$ npm run build
 ```
-This will build your client and server side code and distribute it to the `/clasp` folder
+This will bundle your client and server code it to the `/clasp` folder
 
 Use <a href="https://developers.google.com/apps-script/guides/clasp" target="_blank">clasp</a> to push your files to Google
 
@@ -100,7 +101,7 @@ export default HelloWorld;
 - Compile React-Apps into a Google App Scripts friendly bundle
 - Simple and familiar client - server api protocol
 - Created to be used with the create-react-app toolSet, unleashing its power
-- Javascript module support ES6 or Node Module
+- Javascript ES6 module support for GAS server
 
 ---
 
