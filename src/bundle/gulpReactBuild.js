@@ -9,7 +9,7 @@ const replace = require('gulp-replace');
 // do some error handling
 
 const gulpReactBuild = (options) => new Promise((resolve) => {
-  if (options.skipReact) return resolve();
+  if (options.react.skip) return resolve();
   const tm = timer().start();
   lg.start();
   const input = path.join(process.cwd(), '/build/index.html');
