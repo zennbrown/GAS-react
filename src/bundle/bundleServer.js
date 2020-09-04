@@ -20,11 +20,11 @@ const terserOptions = {
 };
 
 async function build(options) {
-  if (options.skipServer) return Promise.resolve();
+  if (options.server.skip) return Promise.resolve();
   // see below for details on the options
   const inputOptions = {
     input: path.join(process.cwd(), '/server/index.js'),
-    plugins: [ruResolve(), options.compress && terser(terserOptions)],
+    plugins: [ruResolve(), options.server.compress && terser(terserOptions)],
     context: process.cwd()
   };
   const outputOptions = {
