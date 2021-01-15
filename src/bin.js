@@ -13,7 +13,7 @@ const argv = mainOptions._unknown || [];
 getConfig(argv).then((config) => {
   switch (mainOptions.command) {
     case 'init': return init(config);
-    case 'bundle': return bundle(config);
+    case 'bundle': return bundle(config);s
     default: console.log('Unknown command. use init or bundle');
   }
 }).catch(console.log);
