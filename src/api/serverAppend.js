@@ -8,11 +8,19 @@ function doGet() {
 }
 
 async function apiListener(_req) {
-  const req = JSON.parse(_req);
+  let req = null;
   try {
-    return { body: await paths__[req.path](req) };
+    const res = {
+      body: '',
+      status: 200,
+    };
+    req = JSON.parse(_req);
+    if (!paths__[req.path]) throw new Error(`Path "${req.path}" does not exist`);
+    const data = await paths__[req.path](req, res);
+    res.body = res.body || data;
+    return res;
   } catch (err) {
-    console.log(err);
-    return { error: err };
+    console.log(req && req.path, err);
+    return { error: err && err.message ? err.message : err, status: 500, body: '' };
   }
 }
