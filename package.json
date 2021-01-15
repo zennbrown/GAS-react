@@ -15,14 +15,21 @@
     "@babel/preset-env": "^7.10.4",
     "@rollup/plugin-babel": "^5.1.0",
     "babel": "^6.23.0",
-    "eslint": "^7.3.1",
+    "eslint": "^7.17.0",
+    "eslint-config-airbnb": "^18.2.1",
     "eslint-config-airbnb-base": "^14.2.0",
-    "eslint-plugin-import": "^2.22.0",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-jsx-a11y": "^6.4.1",
+    "eslint-plugin-react": "^7.22.0",
+    "eslint-plugin-react-hooks": "^4.2.0",
     "rollup-plugin-auto-external": "^2.0.0",
     "rollup-plugin-preserve-shebangs": "^0.2.0"
   },
   "bin": {
     "gas-react": "./dist/bin.js"
+  },
+  "peerDependencies": {
+    "react": "^16.13.1"
   },
   "dependencies": {
     "cli-color": "^2.0.0",
