@@ -12,4 +12,5 @@ export default (options) => new Promise((resolve, reject) => {
     lg.success(tm.end());
     resolve();
   }
+  return null;
 });

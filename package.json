@@ -29,7 +29,7 @@
     "gas-react": "./dist/bin.js"
   },
   "peerDependencies": {
-    "react": "^16.13.1"
+    "react": ">16.10.0"
   },
   "dependencies": {
     "cli-color": "^2.0.0",
@@ -41,6 +41,7 @@
     "gulp-inline-source": "^4.0.0",
     "gulp-replace": "^1.0.0",
     "rollup": "^2.18.1",
+    "rollup-plugin-jsx": "^1.0.3",
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-terser": "^6.1.0"
   },

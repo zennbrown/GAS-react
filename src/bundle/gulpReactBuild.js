@@ -7,7 +7,7 @@ const inlinesource = require('gulp-inline-source');
 const replace = require('gulp-replace');
 
 // do some error handling
-
+// eslint-disable-next-line consistent-return
 const gulpReactBuild = (options) => new Promise((resolve) => {
   if (options.react.skip) return resolve();
   const tm = timer().start();
