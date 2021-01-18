@@ -13,7 +13,8 @@ const bundle = async (config) => {
     await bundleServer(config);
     lg.success(tm.end());
   } catch (err) {
-    console.log(err);
+    console.error(err);
+    throw err;
   }
 };
 
