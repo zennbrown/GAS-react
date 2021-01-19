@@ -2,8 +2,6 @@
 
 With gas-react you can create a react app bundle that will work on the Google App Script server, allowing you to build react apps that integrate with the the google suite.
 
-The gas-react library extends the create-react-app tool set, and requires very little additional learning.
-
 </br>
 
 ![NPM](https://img.shields.io/npm/l/gas-react) ![NPM](https://img.shields.io/npm/v/gas-react) ![NPM](https://img.shields.io/npm/dw/gas-react) ![GIT](https://img.shields.io/github/last-commit/zennbrown/gas-react)
@@ -44,10 +42,10 @@ $ npx gas-react init
 
 ## Usage
 
-- Once gas-react is installed and initialized, when you run `npm run build` your gas bundle will also be created.
+- Once gas-react is installed and initialized, run `npm run build` to create your gas bundle
 
 ```shell
-$ npm run build
+$ npm run bundle
 ```
 This will bundle your client and server code it to the `/clasp` folder
 
@@ -66,7 +64,10 @@ Gas-react includes a simple and familiar api interface for client-server communi
 ```javascript
 import { server } from 'gas-react';
 
-server.on('hello', (request) => `Hello ${request.body}`);
+server.before((req) => { console.log('Request:', req); });
+
+server.on('hello', ({ body }) => `Hello ${body}`);
+
 ```
 > Client Example
 
@@ -75,20 +76,21 @@ import React, { useState, useEffect } from 'react';
 import { client } from 'gas-react';
 
 function HelloWorld() {
-  const [val, setVal] = useState('Waiting');
+  const [val, setVal] = useState('Loading..');
+
   useEffect(() => {
-    const makeCall = async () => {
-      try {
-        const response = await client.call('hello', 'World');
-        setVal(response.body);
-      } catch (err) {
-        setVal('Error');
-      }
-    };
-    makeCall();
+    client.send('hello', 'World').then((response) => {
+      if (!response.error) setVal(response.body);
+      else setVal('Server Error');
+    }).catch(() => {
+      setVal('Connection Error');
+    });
   }, []);
+
   return (
-    <div className="hello-world">{val}</div>
+    <div className="hello-world">
+      <div>{val}</div>
+    </div>
   );
 }
 
