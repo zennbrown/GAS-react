@@ -14,6 +14,7 @@ With gas-react you can create a react app bundle that will work on the Google Ap
 - [Setup](#setup)
 - [Usage](#usage)
 - [API](#api)
+- [Router](#router)
 - [Features](#features)
 - [Team](#team)
 - [FAQ](#faq)
@@ -42,7 +43,7 @@ $ npx gas-react init
 
 ## Usage
 
-- Once gas-react is installed and initialized, run `npm run build` to create your gas bundle
+- Once gas-react is installed and initialized, run `npm run bundle` to create your gas bundle
 
 ```shell
 $ npm run bundle
@@ -96,6 +97,12 @@ function HelloWorld() {
 
 export default HelloWorld;
 ```
+---
+
+## Router
+
+Popular router solutions will not with a Google App Scripts webapp. We have developed a familiar router that integrates with the google history API. <a href="https://www.npmjs.com/package/gas-react-router" target="_blank">check it out here gas-react-router</a>
+
 ---
 
 ## Features
