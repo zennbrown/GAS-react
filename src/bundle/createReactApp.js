@@ -7,14 +7,14 @@ export default (options) => new Promise((resolve, reject) => {
   const tm = timer().start();
   lg.start();
 
-  const ls = spawn('react-scripts', ['build'], { env: { ...process.env, GENERATE_SOURCEMAP: false }, shell: true });
+  const ls = spawn('npm', ['run', 'build'], { env: { ...process.env, GENERATE_SOURCEMAP: false }, shell: true });
 
   ls.stdout.on('data', (data) => {
     console.log(`create-react-app: ${data}`);
   });
 
   ls.on('close', (code) => {
-    if (code === 0) {
+    if (code >= 0) {
       lg.success(tm.end());
       return resolve();
     }
