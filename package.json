@@ -33,10 +33,13 @@
     "cli-select": "^1.1.2",
     "command-line-args": "^5.1.1",
     "copy-dir": "^1.3.0",
+    "event-stream": "^4.0.1",
     "ez-options": "^0.2.2",
     "gulp": "^4.0.2",
     "gulp-inline-source": "^4.0.0",
     "gulp-replace": "^1.0.0",
+    "gulp-util": "^3.0.8",
+    "jsdom": "^19.0.0",
     "webpack": "^5.15.0"
   },
   "repository": {

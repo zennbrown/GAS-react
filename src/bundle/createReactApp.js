@@ -7,7 +7,8 @@ export default (options) => new Promise((resolve, reject) => {
   const tm = timer().start();
   lg.start();
 
-  const ls = spawn('react-scripts', ['build'], { env: { ...process.env, GENERATE_SOURCEMAP: false }, shell: true });
+  // PR 4
+  const ls = spawn('npm', ['run', 'build'], { env: { ...process.env, GENERATE_SOURCEMAP: false }, shell: true });
 
   ls.stdout.on('data', (data) => {
     console.log(`create-react-app: ${data}`);
