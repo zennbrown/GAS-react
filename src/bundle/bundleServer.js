@@ -13,14 +13,49 @@ const build = async (options) => new Promise((resolve, reject) => {
   const tm = timer().start();
   lg.start();
 
+  const tsPath = path.join(process.cwd(), '/server/index.ts');
+  const jsPath = path.join(process.cwd(), '/server/index.js');
+
+  const entry = fs.existsSync(tsPath) ? tsPath : jsPath;
+
+  if (!entry) {
+    return reject(new Error('Unable to resolve entry file server/index.(js/ts)'));
+  }
+
+  const loaderPath = require.resolve('ts-loader');
+
+  const tsConfigPath = path.resolve(process.cwd(), './server/tsconfig.json');
+
   webpack({
-    entry: path.join(process.cwd(), '/server/index.js'),
+    entry,
+    cache: false,
     mode: 'production',
+    resolve: {
+      extensions: ['.ts', '.js']
+    },
+    context: path.resolve(__dirname, '../'),
+    target: ['es2020'],
+    module: {
+      rules: [
+        {
+          test: /\.tsx?$/,
+          loader: loaderPath,
+          options: {
+            context: path.resolve(process.cwd(), './server/'),
+            configFile: tsConfigPath
+          }
+        }
+      ]
+    },
+    optimization: {
+      minimize: false
+    },
     plugins: [
       new webpack.BannerPlugin({ banner: bannerText, raw: true })
     ],
     output: {
       filename: 'api.js',
+      chunkFormat: false,
       path: path.join(process.cwd(), 'clasp'),
     },
   }, (err, stats) => { // [Stats Object](#stats-object)
